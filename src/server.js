@@ -1,13 +1,20 @@
 'use strict'
 
-// const startFile = require('./start.js');
+// requirements
 const Hapi = require('hapi');
 const server = new Hapi.Server();
 const Path = require('path');
 const Inert = require('inert');
-// const route = require('./routes.js');
+const HTTPS = require('hapi-require-https');
+const fs = require('fs');
+//
 
-server.connection({port: 3000, host: 'localhost'});
+server.connection({port: 3000, host: 'localhost',
+  tls : {
+    key: fs.readFileSync(Path.join(__dirname, "../keys/key.pem")),
+    cert: fs.readFileSync(Path.join(__dirname, "../keys/cert.pem"))
+  }
+});
 
 server.register(Inert, (err) => {
   if (err) {
